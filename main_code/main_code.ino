@@ -19,4 +19,5 @@ void loop() {
   outputValue = map(sensorValue, 0, 1023, 0, 30000);
   
   onboardLed.setDuty(outputValue);
+  delay(1000);
 }
