@@ -5,7 +5,7 @@
 #include "Arduino.h"
 #include "IRDistance.h"
 
-const int WAIT_TIME = 10; //ms
+const int WAIT_TIME = 1; //ms
 
 IRDistance::IRDistance(int ledPin, int transistorPin)
 {

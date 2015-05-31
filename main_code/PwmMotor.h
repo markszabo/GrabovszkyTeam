@@ -9,7 +9,7 @@
 class PwmMotor
 {
   public:
-    PwmMotor(int pin, int timerId);
+    PwmMotor(int pin);
     void init();
     void write();
     void setDuty(int duty);
@@ -23,5 +23,5 @@ class PwmMotor
     static void _on_led_PA7();
     static void _off_led_PA7();
 };
-
+static int timerId = 2; //first timer has to be nr 2, since Serial already uses timer nr 1
 #endif

@@ -5,9 +5,10 @@
 #include "Arduino.h"
 #include "PwmMotor.h"
 
-PwmMotor::PwmMotor(int pin, int timerId) : _timer(timerId) //do not use timer nr 1, since Serial already uses it
+PwmMotor::PwmMotor(int pin) : _timer(timerId)
 {
   _pin = pin;
+  timerId++; //next object should use the next timer
 }
 
 void PwmMotor::init()
