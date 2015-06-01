@@ -1,5 +1,12 @@
 /*
-  TODO: write description
+  Class for generating pwm signal
+  Functions for timers are based on this code:
+    http://static.leaflabs.com/pub/leaflabs/maple-docs/latest/timers.html#timers
+    http://static.leaflabs.com/pub/leaflabs/maple-docs/latest/lang/api/hardwaretimer.html#lang-hardwaretimer
+  Usage: 
+    PwmMotor onboardLed(PC15); 
+    setup: onboardLed.init()
+    loop: onboardLed.setDuty(outputValue); //set the pwm duty. Goes from 2 to 30000
 */
 #ifndef PwmMotor_h
 #define PwmMotor_h
