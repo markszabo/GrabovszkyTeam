@@ -13,16 +13,24 @@
 
 #include "Arduino.h"
 
+#define PIN_UNDEFINED -9999
+
 class PwmMotor
 {
   public:
     PwmMotor(int pin);
+    PwmMotor(int pin, int directionPin);
+    PwmMotor(int pin, int directionPin, int modePin);
     void init();
     void write();
     void setDuty(int duty);
   private:
     int _pin;
+    int _directionPin;
+    int _modePin;
     HardwareTimer _timer;
+    void _initTimer();
+    void _setUnsignedDuty(int uduty);
     static void _on_led_PC15();
     static void _off_led_PC15();
     static void _on_led_PB1();
