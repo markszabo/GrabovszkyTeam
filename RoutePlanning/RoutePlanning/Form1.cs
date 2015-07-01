@@ -19,7 +19,6 @@ namespace RoutePlanning
         private void Form1_Load(object sender, EventArgs e)
         {
             trackBar1.Value = pixelsize;
-            comboBox1.SelectedIndex = 0;
         }
 
         int pixelsize = 10;
@@ -34,27 +33,11 @@ namespace RoutePlanning
                 //pictureBox2.Image = i;
                 pictureBox1.Image = i;
                 Bitmap bmp2 = null;
-                string filename = ofd.FileName.Substring(ofd.FileName.LastIndexOf("\\"));
-                switch (comboBox1.SelectedIndex)
-                { 
-                    case 0:
-                        System.Diagnostics.Debug.WriteLine("=============\nPQ\n"+filename);
-                        bmp2 = GraphUtil.DrawPath((Bitmap)i, GraphUtil.GetPathPQ(g), trackBar1.Value, g, checkBox1.Checked);
-                        break;
-                    case 1:
-                        System.Diagnostics.Debug.WriteLine("=============\nDA\n" + filename);
-                        bmp2 = GraphUtil.DrawPath((Bitmap)i, GraphUtil.GetPath_DA(g), trackBar1.Value, g, checkBox1.Checked);
-                        break;
-                    case 2:                        
-                        System.Diagnostics.Debug.WriteLine("=============\nPQ_DA\n" + filename);
-                        bmp2 = GraphUtil.DrawPath((Bitmap)i, GraphUtil.GetPathPQ_DA(g), trackBar1.Value, g, checkBox1.Checked);
-                        break;
-                    case 3:
-                    default:
-                        System.Diagnostics.Debug.WriteLine("=============\nList\n" + filename);
-                        bmp2 = GraphUtil.DrawPath((Bitmap)i, GraphUtil.GetPath(g), trackBar1.Value, g, checkBox1.Checked);
-                        break;
-                }
+                if(checkBox2.Checked)
+                    bmp2 = GraphUtil.DrawPath((Bitmap)i, GraphUtil.GetPathPQ(g), trackBar1.Value, g, checkBox1.Checked);
+                else
+                    bmp2 = GraphUtil.DrawPath((Bitmap)i, GraphUtil.GetPath(g), trackBar1.Value, g, checkBox1.Checked);
+
                 if (bmp2 != null)
                 {
                     pictureBox2.Size = new Size(bmp2.Width, bmp2.Height);
