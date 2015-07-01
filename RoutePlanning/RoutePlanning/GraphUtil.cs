@@ -90,7 +90,7 @@ namespace RoutePlanning
             }
 
             TimeSpan minsec = TimeSpan.Zero;
-            while (unvis.Count > 0 ) // && g.dest.visited == false)
+            while (unvis.Count > 0) // && g.dest.visited == false)
             {
                 DateTime t11 = DateTime.Now;
                 Node curr = getmin(unvis, g);
@@ -116,9 +116,53 @@ namespace RoutePlanning
             DateTime t2 = DateTime.Now;
             Debug.WriteLine("getpath: " + (t2 - t1).TotalMilliseconds + "ms");
             Debug.WriteLine("where getmin: " + minsec.TotalMilliseconds + "ms");
-            return GetPathFromNode(g, g.start);       
+            return GetPathFromNode(g, g.start);
         }
 
+        public static List<Node> GetPath_DA(Graph g)
+        {
+            DateTime t1 = DateTime.Now;
+
+            DynamicArray<Node> unvis = new DynamicArray<Node>();
+            foreach (var n in g.nodes)
+            {
+                if (n != g.start)
+                    n.dist = g.nodes.Count + 5;
+                else
+                    n.dist = 0;
+                unvis.Add(n);
+            }
+
+            TimeSpan minsec = TimeSpan.Zero;
+            while (unvis.Count > 0) // && g.dest.visited == false)
+            {
+                DateTime t11 = DateTime.Now;
+                Node curr = getmin(unvis, g);
+                DateTime t21 = DateTime.Now;
+                minsec += (t21 - t11);
+
+                for (int i = 0; i < curr.neighbours.Count; i++)
+                {
+                    Node currn = curr.neighbours[i];
+                    if (currn.visited)
+                        continue;
+
+                    if (currn.dist > curr.dist + curr.distances[i])
+                    {
+                        currn.prev = curr;
+                        currn.dist = curr.dist + curr.distances[i];
+                    }
+                }
+                unvis.Remove(curr);
+                curr.visited = true;
+            }
+
+            DateTime t2 = DateTime.Now;
+            Debug.WriteLine("getpath: " + (t2 - t1).TotalMilliseconds + "ms");
+            Debug.WriteLine("where getmin: " + minsec.TotalMilliseconds + "ms");
+            return GetPathFromNode(g, g.start);
+        }
+        
         public static List<Node> GetPathPQ(Graph g)
         {
             DateTime t1 = DateTime.Now;
@@ -127,7 +171,49 @@ namespace RoutePlanning
             foreach (var n in g.nodes)
             {
                 if (n != g.start)
-                    n.dist = int.MaxValue/3;
+                    n.dist = int.MaxValue / 3;
+                else
+                    n.dist = 0;
+            }
+            open.Add(g.start);
+
+            TimeSpan minsec = TimeSpan.Zero;
+            while (open.Count > 0) // && g.dest.visited == false)
+            {
+                DateTime t11 = DateTime.Now;
+                Node curr = open.PopFirst();
+                DateTime t21 = DateTime.Now;
+                minsec += (t21 - t11);
+
+                for (int i = 0; i < curr.neighbours.Count; i++)
+                {
+                    Node currn = curr.neighbours[i];
+                    if (currn.dist > curr.dist + curr.distances[i])
+                    {
+                        currn.prev = curr;
+                        currn.dist = curr.dist + curr.distances[i];
+                        if (!open.Contains(currn))
+                            open.Add(currn);
+                    }
+                }
+                curr.visited = true;
+            }
+
+            DateTime t2 = DateTime.Now;
+            Debug.WriteLine("getpath: " + (t2 - t1).TotalMilliseconds + "ms");
+            Debug.WriteLine("where getmin: " + minsec.TotalMilliseconds + "ms");
+            return GetPathFromNode(g, g.dest);
+        }
+
+        public static List<Node> GetPathPQ_DA(Graph g)
+        {
+            DateTime t1 = DateTime.Now;
+
+            PriorityQueue_DA<Node> open = new PriorityQueue_DA<Node>(new NodeComp(g));
+            foreach (var n in g.nodes)
+            {
+                if (n != g.start)
+                    n.dist = int.MaxValue / 3;
                 else
                     n.dist = 0;
             }
@@ -175,14 +261,37 @@ namespace RoutePlanning
 
         public const float q = 0f;
 
-        static Node getmin(List<Node> unvis, Graph g)
+        //static Node getmin(IList<Node> unvis, Graph g)
+        //{
+        //    if (unvis.Count == 0) return null;
+        //    Node curr = unvis[0];
+        //    int cx, cy;
+        //    GetCoords(curr, out cx, out cy);
+        //    foreach (var n in unvis)
+        //    {
+        //        int nx, ny;
+        //        GetCoords(n, out nx, out ny);
+        //        int dx, dy;
+        //        GetCoords(g.dest, out dx, out dy);
+
+        //        if (n.dist + q * Math.Abs(nx + ny - dx - dy) < curr.dist + q * Math.Abs(cx + cy - dx - dy))
+        //        {
+        //            curr = n;
+        //            GetCoords(curr, out cx, out cy);
+        //        }
+        //    }
+        //    return curr;
+        //}
+
+        static Node getmin(IList<Node> unvis, Graph g)
         {
             if (unvis.Count == 0) return null;
-            Node curr= unvis[0];
+            Node curr = unvis[0];
             int cx, cy;
             GetCoords(curr, out cx, out cy);
-            foreach (var n in unvis)
+            for(int i = 0; i < unvis.Count; ++i)
             {
+                Node n = unvis[i];
                 int nx, ny;
                 GetCoords(n, out nx, out ny);
                 int dx, dy;
